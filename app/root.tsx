@@ -9,7 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getCurrentUser, signIn as puterSignIn, signOut as puterSignOut } from "lib/puter.action";
 
 export const links: Route.LinksFunction = () => [
@@ -43,25 +43,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-const DEFAULT_AUTH_STATE : AuthState = {
-  isSignIn : false,
-  userName : null,
-  userId : null,
+const DEFAULT_AUTH_STATE: AuthState = {
+  isSignedIn: false,
+  userName: null,
+  userId: null,
 
 }
 
 
 export default function App() {
   const [authState, setAuthState] = useState<AuthState>(DEFAULT_AUTH_STATE);
-  const refreshAuth = async () =>{
+  const refreshAuth = useCallback(async () => {
     try {
-       const user = await getCurrentUser();
+      const user = await getCurrentUser();
 
-       setAuthState ({
-        isSignIn : !!user,
+      setAuthState({
+        isSignedIn: !!user,
         userName: user?.username || null,
-        userId: user?.uuid|| null,
-        })
+        userId: user?.uuid || null,
+      })
+      return true;
     } catch (error) {
       // 401 is expected when user is not authenticated yet
       if (error instanceof Error && error.message.includes('401')) {
@@ -72,25 +73,25 @@ export default function App() {
       setAuthState(DEFAULT_AUTH_STATE);
       return false;
     }
+  }, []);
+
+  useEffect(() => {
+    refreshAuth();
+  }, [refreshAuth])
+
+  const signIn = async () => {
+    await puterSignIn();
+    return await refreshAuth();
   }
-
-useEffect (() =>{
-  refreshAuth();
-},[])
-
-const signIn = async () =>{
-  await puterSignIn();
-   return await refreshAuth();
-}
-const signOut = async () =>{
-  await puterSignOut();
-   return await refreshAuth();
-}
+  const signOut = async () => {
+    await puterSignOut();
+    return await refreshAuth();
+  }
 
   return (
     <main className="min-h-screen bg-background text-foreground relative z-10 pt-16">
-      <Outlet 
-        context={{ ...authState, refreshAuth, signIn, signOut}}
+      <Outlet
+        context={{ ...authState, refreshAuth, signIn, signOut }}
       />
     </main>
   )

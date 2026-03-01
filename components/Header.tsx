@@ -4,9 +4,9 @@ import Button from './ui/Button'
 import { useOutletContext } from 'react-router'
 
 function Header() {
-  const { isSignIn, userName, signIn, signOut } = useOutletContext<AuthContext>()
+  const { isSignedIn, userName, signIn, signOut } = useOutletContext<AuthContext>()
   const handleAuthClick = async () => {
-    if (isSignIn) {
+    if (isSignedIn) {
       try {
         await signOut();
 
@@ -19,7 +19,7 @@ function Header() {
     try {
       await signIn();
     } catch (error) {
-      console.log(`Puter Sign out Failed: ${error}`)
+      console.error(`Puter Sign in Failed: ${error}`)
     }
 
   }
@@ -43,10 +43,10 @@ function Header() {
         </div>
         <div className='actions'>
 
-          {isSignIn ? (
+          {isSignedIn ? (
             <>
               <span>
-                {userName ? `Welcome, ${userName}` : 'Sign In'}
+                {userName ? `Welcome, ${userName}` : 'Welcome'}
               </span>
               <Button className='btn' size='sm' onClick={handleAuthClick}>
                 Log Out
@@ -61,9 +61,6 @@ function Header() {
               <a href="#upload" className='cta'>Get Started</a>
             </>
           )}
-
-
-
         </div>
       </nav>
     </header>
