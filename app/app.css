@@ -446,10 +446,10 @@
             }
 
             .upload-shell {
-                @apply w-full max-w-5xl mx-auto relative rounded-3xl overflow-hidden bg-linear-to-b from-blue-100/50 to-white/50 border border-blue-100 p-6 md:p-12 shadow-sm min-h-100 flex items-center justify-center;
+                @apply w-full max-w-5xl mx-auto relative rounded-3xl overflow-hidden bg-linear-to-b from-blue-100/50 to-white/50 border border-blue-100 p-6 md:p-12 shadow-sm min-h-[500px] flex items-center justify-center;
 
                 .grid-overlay {
-                    @apply absolute inset-0 opacity-40 pointer-events-none;
+                    @apply absolute inset-0 opacity-80 pointer-events-none;
 
                     background-image:
                             linear-gradient(#3b82f6 1px, transparent 1px),

@@ -4,9 +4,9 @@ import Button from './ui/Button'
 import { useOutletContext } from 'react-router'
 
 function Header() {
-  const { isSignIn, userName, signIn, signOut } = useOutletContext<AuthContext>()
+  const { isSignedIn, userName, signIn, signOut } = useOutletContext<AuthContext>()
   const handleAuthClick = async () => {
-    if (isSignIn) {
+    if (isSignedIn) {
       try {
         await signOut();
 
@@ -43,7 +43,7 @@ function Header() {
         </div>
         <div className='actions'>
 
-          {isSignIn ? (
+          {isSignedIn ? (
             <>
               <span>
                 {userName ? `Welcome, ${userName}` : 'Sign In'}
@@ -61,9 +61,6 @@ function Header() {
               <a href="#upload" className='cta'>Get Started</a>
             </>
           )}
-
-
-
         </div>
       </nav>
     </header>

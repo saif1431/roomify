@@ -3,6 +3,8 @@ import { Welcome } from "../welcome/welcome";
 import Header from "components/Header";
 import { ArrowRight, ArrowUpRight, Clock, Layers } from "lucide-react";
 import Button from "components/ui/Button";
+import UploadFile from "components/UploadFile";
+import { useNavigate } from "react-router";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -12,6 +14,18 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  const handleUploadComplete = (base64Image: string) => {
+    const newId = Date.now().toString();
+    navigate(`/visualizer/${newId}`)
+
+    return true;
+  }
+
+
+
+
   return (
 
     <div className="home">
@@ -35,20 +49,17 @@ export default function Home() {
         </div>
 
         <div className="upload-shell" id="upload">
-          <div className="grid-overlay">
+          <div className="grid-overlay" />
 
-            <div className="upload-card mx-auto mt-12">
-              <div className="upload-head ">
-                <div className="upload-icon">
-                  <Layers className="icon" />
-                </div>
-                <h3>Upload your floor plan</h3>
-                <p>Supports JPG, PNG, formats upto 10MB</p>
+          <div className="upload-card mx-auto mt-12">
+            <div className="upload-head ">
+              <div className="upload-icon">
+                <Layers className="icon" />
               </div>
-              <p>Upload Images</p>
-
+              <h3>Upload your floor plan</h3>
+              <p>Supports JPG, PNG, formats upto 10MB</p>
             </div>
-
+            <UploadFile onComplete={handleUploadComplete} />
 
           </div>
 
@@ -65,30 +76,30 @@ export default function Home() {
             </div>
           </div>
           <div className="projects-grid">
-<div className="project-card group">
-  <div className="preview">
-<img src="https://roomify-mlhuk267-dfwu1i.puter.site/projects/1770803585402/rendered.png" alt="project" />
-<div className="badge">
-<span>Community</span>
-</div>
-  </div>
-  <div className="card-body">
-    <div>
-      <h3>Project Manahattan</h3>
-      <div className="meta">
-        <Clock size={12}/>
-        <span>{new Date('01.01.2027').toLocaleDateString()}</span>
-<span>Saif Dev</span>
-      </div>
-    </div>
-    <div className="arrow">
-      <ArrowUpRight size={18}/>
+            <div className="project-card group">
+              <div className="preview">
+                <img src="https://roomify-mlhuk267-dfwu1i.puter.site/projects/1770803585402/rendered.png" alt="project" />
+                <div className="badge">
+                  <span>Community</span>
+                </div>
+              </div>
+              <div className="card-body">
+                <div>
+                  <h3>Project Manahattan</h3>
+                  <div className="meta">
+                    <Clock size={12} />
+                    <span>{new Date('01.01.2027').toLocaleDateString()}</span>
+                    <span>Saif Dev</span>
+                  </div>
+                </div>
+                <div className="arrow">
+                  <ArrowUpRight size={18} />
 
-    </div>
+                </div>
 
-  </div>
+              </div>
 
-</div>
+            </div>
           </div>
         </div>
       </section>
