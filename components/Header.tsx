@@ -19,7 +19,7 @@ function Header() {
     try {
       await signIn();
     } catch (error) {
-      console.log(`Puter Sign out Failed: ${error}`)
+      console.error(`Puter Sign in Failed: ${error}`)
     }
 
   }
@@ -46,7 +46,7 @@ function Header() {
           {isSignedIn ? (
             <>
               <span>
-                {userName ? `Welcome, ${userName}` : 'Sign In'}
+                {userName ? `Welcome, ${userName}` : 'Welcome'}
               </span>
               <Button className='btn' size='sm' onClick={handleAuthClick}>
                 Log Out

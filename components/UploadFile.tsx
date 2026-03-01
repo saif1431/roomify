@@ -1,5 +1,5 @@
 import { CheckCircle2, ImageIcon, UploadIcon } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useOutletContext } from 'react-router'
 import { PROGRESS_STEP, PROGRESS_INTERVAL_MS, REDIRECT_DELAY_MS } from '../lib/constants'
 
@@ -12,21 +12,43 @@ function UploadFile({ onComplete }: UploadFileProps) {
   const [file, setFile] = useState<File | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [progress, setProgress] = useState(0)
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   const { isSignedIn } = useOutletContext<AuthContext>()
+
+  const clearProgressInterval = () => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+      progressIntervalRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => clearProgressInterval();
+  }, []);
 
   const processFile = (file: File) => {
     if (!isSignedIn) return;
 
+    // Check if file is image
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Please upload a valid image file (JPG, PNG).");
+      return;
+    }
+
     setFile(file);
+    setProgress(0);
+    clearProgressInterval();
+
     const reader = new FileReader();
 
     reader.onload = (e) => {
       const base64 = e.target?.result as string;
-      const interval = setInterval(() => {
+      progressIntervalRef.current = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 100) {
-            clearInterval(interval);
+            clearProgressInterval();
             setTimeout(() => {
               onComplete?.(base64);
             }, REDIRECT_DELAY_MS);
@@ -35,6 +57,12 @@ function UploadFile({ onComplete }: UploadFileProps) {
           return prev + PROGRESS_STEP;
         });
       }, PROGRESS_INTERVAL_MS);
+    };
+
+    reader.onerror = () => {
+      clearProgressInterval();
+      alert("Failed to read file. Please try again.");
+      setFile(null);
     };
 
     reader.readAsDataURL(file);

@@ -1,9 +1,11 @@
 import React from 'react'
+import { useParams } from 'react-router'
 
-function visualizer() {
+function Visualizer() {
+      const { id } = useParams()
       return (
-            <div>visualizer.$id</div>
+            <div>Visualizer ID: {id}</div>
       )
 }
 
-export default visualizer
+export default Visualizer
